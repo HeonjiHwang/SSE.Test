@@ -7,7 +7,7 @@ namespace SSE.Test.Services.Chat.BotReplyFactory
         private readonly string _question;
         public GeneralFactory(ChatRequest request)
         {
-            _question = request.Question;
+            _question = request.Question.Message;
         }
 
         public Task GetBotReplyContextAsync()

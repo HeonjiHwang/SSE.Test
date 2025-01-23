@@ -26,16 +26,25 @@ namespace SSE.Test.Services.Chat
                 ChatMessage chatMessage = new()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Message = ""
+                    Message = "",
+                    SenderType = "Bot",
+                    BodyType = "Plain",
+                    SentDate = DateTime.UtcNow,
+                    MessageType = "loading"
                 };
+                string updatedJson = "";
                 string json = JsonSerializer.Serialize(chatMessage);
                 string pattern = "(\"Message\"\\s*:\\s*\").*?(\"\\s*[},])";
 
-                await _llmService.StreamLLMResponse(systemMessage, request.Question, async (message) =>
+                await _llmService.StreamLLMResponse(systemMessage, request.Question.Message, async (message) =>
                 {
-                    string updatedJson = Regex.Replace(json, pattern, $"$1{message}$2");
+                    updatedJson = Regex.Replace(json, pattern, $"$1{message}$2");
                     onStreamChunk(updatedJson);
                 }, cancellationToken);
+
+                var pattern2 = "(\"MessageType\"\\s*:\\s*\").*?(\"\\s*[},])";
+                updatedJson = Regex.Replace(updatedJson, pattern2, $"$1{""}$2");
+                onStreamChunk(updatedJson);
             }
             catch(Exception ex)
             {

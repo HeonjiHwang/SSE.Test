@@ -37,13 +37,16 @@ namespace SSE.Test.Controllers
 
             await _chatService.GetBotReplyAsync(request, async (message) =>
             {
-                var lines = message.Split('\n');
-                foreach (var line in lines)
+                if (!string.IsNullOrEmpty(message))
                 {
-                    await Response.WriteAsync($"data: {line}\n");
+                    var lines = message.Split('\n');
+                    foreach (var line in lines)
+                    {
+                        await Response.WriteAsync($"data: {line}\n");
+                    }
+                    await Response.WriteAsync("\n");
+                    await Response.Body.FlushAsync();
                 }
-                await Response.WriteAsync("\n");
-                await Response.Body.FlushAsync();
             }, cancellationToken);
         }
     }

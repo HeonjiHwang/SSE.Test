@@ -3,6 +3,6 @@
     public class ChatRequest
     {
         public string BotId { get; set; } = string.Empty;
-        public string Question { get; set; } = string.Empty;
+        public ChatMessage Question { get; set; } = new();
     }
 }
