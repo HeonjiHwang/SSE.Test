@@ -19,6 +19,17 @@ namespace SSE.Test
             builder.Services.AddTransient<ILLMService, LLMService>();
             #endregion
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSpecificOrigins", policy =>
+                {
+                    policy.WithOrigins("https://localhost:3000")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials();
+                });
+            });
+
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
 
@@ -35,6 +46,8 @@ namespace SSE.Test
             app.UseAuthorization();
 
             app.MapControllers();
+
+            app.UseCors("AllowSpecificOrigins");
 
             app.Run();
         }
